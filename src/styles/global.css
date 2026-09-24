@@ -2,9 +2,9 @@
    Design tokens. Change a color here and it changes everywhere.
    ───────────────────────────────────────────────────────────── */
 :root {
-  --bg-top: #0b1633;
-  --bg-bottom: #020409;
-  --surface: #111f45; /* cards */
+  --bg-top: #040a1b;
+  --bg-bottom: #010308;
+  --surface: #0c1734; /* cards */
   --line: #1e2e60; /* dividers */
   --line-card: #22346a; /* card borders */
   --line-header: #1b2a58;
@@ -19,13 +19,14 @@
   --accent-hover: #ffd873;
   --accent-glow: rgba(255, 197, 61, 0.35);
   --stop: #ff6b5e; /* SafeSight art only */
+  --heading-colour: #7df9ff; /* section headings: Selected work, Experience, and so on */
   --ok: #5be08f; /* status dot */
 
   --chip-bg: #dce4ff;
   --chip-line: #6f86d1;
   --chip-text: #0b1633;
 
-  --heading: var(--font-syne), 'Segoe UI', system-ui, sans-serif;
+  --heading: var(--font-heading), 'Segoe UI', system-ui, sans-serif;
   --body: var(--font-plex), 'Segoe UI', system-ui, sans-serif;
   --mono: var(--font-mono), Consolas, ui-monospace, monospace;
 
@@ -56,7 +57,8 @@ body {
   display: flex;
   flex-direction: column;
   /* Navy at the top, fading toward black as you scroll */
-  background: linear-gradient(180deg, #0b1633 0%, #0a1431 18%, #081028 42%, #050a19 68%, #020409 100%);
+  /* Darker navy at the top, fading to near-black as you scroll */
+  background: linear-gradient(180deg, #040a1b 0%, #040919 30%, #030715 55%, #02050e 78%, #010308 100%);
   color: var(--text);
   font-family: var(--body);
   font-size: 16px;
@@ -141,6 +143,7 @@ ul {
 }
 
 .section-title {
+  color: var(--heading-colour);
   font-size: clamp(34px, 4.5vw, 48px);
   font-weight: 700;
   letter-spacing: -0.02em;

@@ -19,16 +19,16 @@ export const profile = {
 
   // Shown in the browser tab and in search results.
   seo: {
-    title: 'Priyansh Chaurasia | AI and ML engineer',
+    title: 'Priyansh Chaurasia | Software engineer',
     description:
-      'Third-year CSE-AI student at SRMIST, Chennai, building on-device, offline and multilingual AI products. Open to internships.',
+      'Third-year CSE-AI student at SRMIST, Chennai. Full-stack engineer who builds end to end, from REST APIs and databases to the interface, with machine learning where a product needs it. Open to internships.',
   },
 
   hero: {
     status: 'Open to internships', // set to '' to hide the green pill
-    headline: "From public services to factory floors: AI that shows up where it's needed.",
+    headline: 'I work across the stack, from the database to the screen.',
     intro:
-      "Third-year CSE-AI student at SRMIST, Chennai. I turn machine learning models into products people can use: on-device, offline, and in their own language. Right now I'm a research intern at SRMIST.",
+      "Third-year CSE-AI student at SRMIST, Chennai. REST APIs and databases on one end, the screens people actually use on the other, and a machine learning model in between when the problem calls for one. Right now I'm a research intern at SRMIST.",
     photoAlt: 'Portrait of Priyansh Chaurasia',
     photoLabel: 'priyansh', // the detection label above the photo
     photoConfidence: 0.99,
@@ -39,7 +39,7 @@ export const profile = {
     { value: '9.58', label: 'CGPA in B.Tech CSE-AI', countUp: true },
     { value: '300+', label: 'LeetCode problems solved', countUp: true },
     { value: '2', label: 'Internships, at ONGC and SRMIST' },
-    { value: '1st', label: 'Prize at Bid-A-Biz, E-Summit IIT Dharwad' },
+    { value: '2028', label: 'Expected graduation' },
   ],
 
   work: {
@@ -119,7 +119,7 @@ export const profile = {
   },
 
   about: [
-    "I learn fast, make decisions quickly, and like shipping. Most of my projects start with a real problem: a citizen who can't find the right scheme, a worker in a machine's blind spot, a team that can't send its code to the cloud. They end with something people can actually run.",
+    "I enjoy taking real-world problems from an idea to a working solution. I learn fast, experiment often, and like shipping things that are useful rather than building for the sake of it. I'm a software engineer at heart, focused on building reliable systems end to end, and I bring in AI when it genuinely makes a product better. I'm always picking up new technologies along the way.",
     'Outside code, I read interesting articles and work out.',
   ],
 

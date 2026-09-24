@@ -31,12 +31,11 @@ const socials = [
 
       <h1 class="headline">
         {
+          /* The space sits inside each word's span, so the highlight runs unbroken across the line */
           words.map((word, i) => (
-            <>
-              <span class="w" style={`animation-delay: ${150 + i * 70}ms`}>
-                {word}
-              </span>{' '}
-            </>
+            <span class="w" style={`animation-delay: ${150 + i * 70}ms`}>
+              {i < words.length - 1 ? `${word} ` : word}
+            </span>
           ))
         }
       </h1>
@@ -95,19 +94,6 @@ const socials = [
     padding: 96px 0 80px;
   }
 
-  /* Faint dot grid, strongest behind the photo */
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background-image: radial-gradient(rgba(167, 180, 217, 0.16) 1px, transparent 1.4px);
-    background-size: 28px 28px;
-    -webkit-mask-image: radial-gradient(ellipse at 72% 45%, #000 0%, transparent 65%);
-    mask-image: radial-gradient(ellipse at 72% 45%, #000 0%, transparent 65%);
-  }
-
   .hero-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) var(--frame-w);
@@ -149,15 +135,21 @@ const socials = [
     margin-top: 28px;
     max-width: 760px;
     font-size: 58px;
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.07;
     letter-spacing: -0.025em;
     text-wrap: wrap;
   }
 
-  /* Words rise in one by one */
+  /* Words rise in one by one, each on a marker-pen highlight */
   .w {
     display: inline-block;
+    /* Swap these two for a different highlight: any colour pair works */
+    background: var(--accent);
+    color: var(--bg-top);
+    padding: 0.04em 0.06em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
     opacity: 0;
     animation: rise 700ms var(--ease-out) forwards;
   }

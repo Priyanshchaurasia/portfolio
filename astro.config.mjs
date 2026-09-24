@@ -3,6 +3,8 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
+  devToolbar: { enabled: false },
+
   // Set this in Step 6, once the domain is bought. It's used for link previews.
   // site: 'https://priyanshchaurasia.com',
 
@@ -11,12 +13,12 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.local(),
-      name: 'Syne',
-      cssVariable: '--font-syne',
+      name: 'Space Grotesk',
+      cssVariable: '--font-heading',
       fallbacks: ['Segoe UI', 'system-ui', 'sans-serif'],
       options: {
         variants: [
-          { src: ['./src/assets/fonts/syne-latin-wght-normal.woff2'], weight: '400 800', style: 'normal' },
+          { src: ['./src/assets/fonts/space-grotesk-latin-wght-normal.woff2'], weight: '300 700', style: 'normal' },
         ],
       },
     },

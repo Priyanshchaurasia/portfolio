@@ -2,6 +2,7 @@
 import { Font } from 'astro:assets';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import NeuralBackground from '../components/NeuralBackground.astro';
 import { profile } from '../data/profile';
 import '../styles/global.css';
 
@@ -29,11 +30,12 @@ const { title = profile.seo.title, description = profile.seo.description } = Ast
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
 
     <!-- Headings and body text load first; the mono font is only for small labels -->
-    <Font cssVariable="--font-syne" preload />
+    <Font cssVariable="--font-heading" preload />
     <Font cssVariable="--font-plex" preload />
     <Font cssVariable="--font-mono" />
   </head>
   <body>
+    <NeuralBackground />
     <a class="skip-link" href="#main">Skip to content</a>
     <Header />
     <main id="main">
