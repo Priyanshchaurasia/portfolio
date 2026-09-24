@@ -1,0 +1,125 @@
+---
+import { profile } from '../data/profile';
+
+const { about, education } = profile;
+---
+
+<section class="section" id="about" aria-labelledby="about-title">
+  <div class="container about-grid">
+    <div>
+      <h2 class="section-title" id="about-title">About me</h2>
+      {about.map((paragraph) => <p class="para">{paragraph}</p>)}
+    </div>
+
+    <aside class="edu" aria-label="Education">
+      <p class="edu-kicker">Education</p>
+      <h3 class="edu-degree">{education.degree}</h3>
+      <p class="edu-school">{education.school}</p>
+      <dl class="edu-facts">
+        <div>
+          <dt>CGPA</dt>
+          <dd>{education.cgpa}</dd>
+        </div>
+        <div>
+          <dt>Expected graduation</dt>
+          <dd>{education.graduation}</dd>
+        </div>
+      </dl>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .about-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 440px;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .para {
+    margin-top: 18px;
+    max-width: 620px;
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--text-soft);
+  }
+
+  .section-title + .para {
+    margin-top: 24px;
+  }
+
+  .edu {
+    background: var(--surface);
+    border: 1px solid var(--line-card);
+    border-radius: 18px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .edu-kicker {
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+
+  .edu-degree {
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .edu-school {
+    font-size: 17px;
+    line-height: 1.5;
+  }
+
+  .edu-facts {
+    margin: 14px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--line-card);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .edu-facts div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .edu-facts dd {
+    order: -1;
+    margin: 0;
+    font-family: var(--heading);
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  .edu-facts dt {
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 1000px) {
+    .about-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+    }
+
+    .edu {
+      max-width: 520px;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .para {
+      font-size: 16px;
+    }
+
+    .edu {
+      padding: 24px;
+    }
+  }
+</style>

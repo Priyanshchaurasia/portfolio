@@ -1,0 +1,80 @@
+---
+import { profile } from '../data/profile';
+
+const { toolkit } = profile;
+---
+
+<section class="section" id="skills" aria-labelledby="skills-title">
+  <div class="container">
+    <h2 class="section-title" id="skills-title">{toolkit.heading}</h2>
+    <p class="section-subtitle">{toolkit.subtitle}</p>
+
+    <div class="groups">
+      {
+        toolkit.groups.map((group) => (
+          <div class="group">
+            <h3 class="label">{group.label}</h3>
+            <ul class="chips">
+              {group.items.map((item) => (
+                <li class="chip">{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .groups {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .group {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .label {
+    padding-top: 8px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  @media (max-width: 700px) {
+    .groups {
+      margin-top: 28px;
+      gap: 24px;
+    }
+
+    .group {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .label {
+      padding-top: 0;
+      font-size: 17px;
+    }
+
+    .chips {
+      gap: 8px;
+    }
+
+    .chips :global(.chip) {
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+  }
+</style>

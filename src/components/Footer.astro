@@ -1,0 +1,19 @@
+---
+import { profile } from '../data/profile';
+
+// The year updates by itself every time the site is rebuilt
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">© {year} {profile.name}</div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line-header);
+    padding: 28px 0;
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+</style>

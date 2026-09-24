@@ -1,0 +1,159 @@
+---
+import { profile } from '../data/profile';
+---
+
+<section class="section" id="experience" aria-labelledby="experience-title">
+  <div class="container">
+    <h2 class="section-title" id="experience-title">Experience</h2>
+
+    <ol class="timeline">
+      {
+        profile.experience.map((job) => (
+          <li class={job.current ? 'job current' : 'job'}>
+            <p class="dates">{job.dates}</p>
+            <div class="body">
+              <span class="node" aria-hidden="true" />
+              <div class="role-row">
+                <h3 class="role">{job.role}</h3>
+                {job.current && <span class="badge">Now</span>}
+              </div>
+              <p class="org">{job.org}</p>
+              <p class="summary">{job.summary}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .timeline {
+    margin: 48px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .job {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .dates {
+    padding-top: 4px;
+    font-size: 16px;
+    color: var(--text-muted);
+  }
+
+  .body {
+    position: relative;
+    border-left: 1px solid var(--line-strong);
+    padding: 0 0 52px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .job:last-child .body {
+    padding-bottom: 8px;
+  }
+
+  .node {
+    position: absolute;
+    left: -7px;
+    top: 8px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--button-line);
+  }
+
+  .current .node {
+    background: var(--accent);
+  }
+
+  .role-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+  }
+
+  .role {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .badge {
+    padding: 3px 10px;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .org {
+    font-size: 17px;
+    font-weight: 500;
+  }
+
+  .summary {
+    margin-top: 4px;
+    max-width: 720px;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text-muted);
+  }
+
+  /* Phones: dates move above each role, and the line runs down the left */
+  @media (max-width: 700px) {
+    .timeline {
+      margin-top: 32px;
+    }
+
+    .job {
+      position: relative;
+      display: block;
+      border-left: 1px solid var(--line-strong);
+      padding: 0 0 40px 28px;
+    }
+
+    .job:last-child {
+      padding-bottom: 4px;
+    }
+
+    .body {
+      position: static;
+      border-left: 0;
+      padding: 0;
+    }
+
+    .job:last-child .body {
+      padding-bottom: 0;
+    }
+
+    .dates {
+      padding-top: 0;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .node {
+      top: 5px;
+    }
+
+    .role {
+      font-size: 21px;
+    }
+
+    .org {
+      font-size: 16px;
+    }
+
+    .summary {
+      font-size: 15px;
+    }
+  }
+</style>

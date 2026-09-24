@@ -1,0 +1,84 @@
+---
+import Icon from './Icon.astro';
+import { profile } from '../data/profile';
+---
+
+<section class="contact" id="contact" aria-labelledby="contact-title">
+  <div class="container inner">
+    <h2 class="heading" id="contact-title">{profile.contact.heading}</h2>
+    <div class="actions">
+      <a class="btn btn-primary btn-large" href={`mailto:${profile.email}`}>
+        <Icon name="mail" size={19} />
+        Email me
+      </a>
+      <a class="btn btn-outline btn-large" href={profile.links.linkedin} target="_blank" rel="noopener">
+        <Icon name="linkedin" size={19} />
+        Connect on LinkedIn
+      </a>
+    </div>
+    <p class="email">{profile.email}</p>
+  </div>
+</section>
+
+<style>
+  .contact {
+    padding: clamp(96px, 10vw, 120px) 0 96px;
+  }
+
+  .inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+  }
+
+  .heading {
+    max-width: 900px;
+    font-size: clamp(40px, 6.5vw, 72px);
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .btn-large {
+    height: 56px;
+    padding: 0 28px;
+    font-size: 17px;
+  }
+
+  .btn-outline.btn-large {
+    padding: 0 24px;
+  }
+
+  .email {
+    font-size: 16px;
+    color: var(--text-muted);
+    user-select: all;
+  }
+
+  @media (max-width: 700px) {
+    .contact {
+      padding-bottom: 64px;
+    }
+
+    .inner {
+      gap: 24px;
+    }
+
+    .actions {
+      width: 100%;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .actions .btn {
+      width: 100%;
+    }
+  }
+</style>

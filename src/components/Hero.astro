@@ -1,0 +1,449 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { profile } from '../data/profile';
+import photo from '../assets/images/priyansh.jpg';
+
+const { hero, links, email, resume } = profile;
+
+// Split the headline into words so each one can rise in on its own
+const words = hero.headline.split(' ');
+
+const socials = [
+  { label: 'GitHub', href: links.github, icon: 'github' },
+  { label: 'LinkedIn', href: links.linkedin, icon: 'linkedin' },
+  { label: 'LeetCode', href: links.leetcode, icon: 'code' },
+  { label: 'Email', href: `mailto:${email}`, icon: 'mail' },
+] as const;
+---
+
+<section class="hero" id="top">
+  <div class="container hero-grid">
+    <div class="hero-text">
+      {
+        hero.status && (
+          <p class="status">
+            <span class="status-dot" aria-hidden="true" />
+            {hero.status}
+          </p>
+        )
+      }
+
+      <h1 class="headline">
+        {
+          words.map((word, i) => (
+            <>
+              <span class="w" style={`animation-delay: ${150 + i * 70}ms`}>
+                {word}
+              </span>{' '}
+            </>
+          ))
+        }
+      </h1>
+
+      <p class="intro">{hero.intro}</p>
+
+      <div class="actions">
+        <a class="btn btn-primary" href="#work">See my work</a>
+        <a class="btn btn-outline" href={resume} download>
+          <Icon name="download" size={18} />
+          Download resume
+        </a>
+      </div>
+
+      <ul class="socials">
+        {
+          socials.map((s) => (
+            <li>
+              <a href={s.href} aria-label={s.label} target={s.icon === 'mail' ? undefined : '_blank'} rel="noopener">
+                <Icon name={s.icon} size={22} strokeWidth={1.7} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="photo">
+      <div class="photo-inner">
+        <Image
+          src={photo}
+          alt={hero.photoAlt}
+          widths={[240, 344, 480, 688]}
+          sizes="(max-width: 900px) 216px, (max-width: 1100px) 284px, 344px"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <span class="scan" aria-hidden="true"></span>
+      </div>
+      <div class="frame" aria-hidden="true">
+        <span class="corner tl"></span>
+        <span class="corner tr"></span>
+        <span class="corner bl"></span>
+        <span class="corner br"></span>
+        <span class="label">
+          {hero.photoLabel} <span data-count-to={hero.photoConfidence} data-decimals="2">{hero.photoConfidence.toFixed(2)}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding: 96px 0 80px;
+  }
+
+  /* Faint dot grid, strongest behind the photo */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: radial-gradient(rgba(167, 180, 217, 0.16) 1px, transparent 1.4px);
+    background-size: 28px 28px;
+    -webkit-mask-image: radial-gradient(ellipse at 72% 45%, #000 0%, transparent 65%);
+    mask-image: radial-gradient(ellipse at 72% 45%, #000 0%, transparent 65%);
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--frame-w);
+    gap: 80px;
+    align-items: center;
+
+    /* Photo frame size: the photo sits inside the corners with a small gap */
+    --frame-w: 380px;
+    --frame-h: 460px;
+    --inset: 18px;
+    --corner: 40px;
+  }
+
+  .hero-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 14px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    font-size: 15px;
+    color: var(--text-soft);
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ok);
+  }
+
+  .headline {
+    margin-top: 28px;
+    max-width: 760px;
+    font-size: 58px;
+    font-weight: 800;
+    line-height: 1.07;
+    letter-spacing: -0.025em;
+    text-wrap: wrap;
+  }
+
+  /* Words rise in one by one */
+  .w {
+    display: inline-block;
+    opacity: 0;
+    animation: rise 700ms var(--ease-out) forwards;
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(0.45em);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .intro {
+    margin-top: 28px;
+    max-width: 640px;
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+
+  .actions {
+    margin-top: 36px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .actions .btn-primary {
+    padding: 0 26px;
+  }
+
+  .actions .btn-outline {
+    padding: 0 22px;
+  }
+
+  .socials {
+    margin-top: 28px;
+    margin-left: -10px;
+    display: flex;
+    gap: 6px;
+  }
+
+  .socials a {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: var(--text-soft);
+    transition: color 150ms ease;
+  }
+
+  .socials a:hover {
+    color: var(--accent);
+  }
+
+  /* ─── Photo with detection frame ─── */
+  .photo {
+    position: relative;
+    width: var(--frame-w);
+    height: var(--frame-h);
+  }
+
+  .photo-inner {
+    position: absolute;
+    inset: var(--inset);
+    overflow: hidden;
+    border-radius: 4px;
+    background: #fff;
+  }
+
+  .photo-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  /* Amber line sweeping down the photo */
+  .scan {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--accent);
+    box-shadow: 0 0 14px 3px rgba(255, 197, 61, 0.13);
+    opacity: 0;
+    animation: scan 3.8s ease-in-out 1.8s infinite;
+  }
+
+  @keyframes scan {
+    0% {
+      transform: translateY(0);
+      opacity: 0;
+    }
+    8% {
+      opacity: 0.8;
+    }
+    85% {
+      opacity: 0.8;
+    }
+    100% {
+      transform: translateY(calc(var(--frame-h) - 2 * var(--inset)));
+      opacity: 0;
+    }
+  }
+
+  /* The frame starts wide and snaps onto the photo */
+  .frame {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    animation: lockon 900ms var(--ease-out) 900ms both;
+  }
+
+  @keyframes lockon {
+    0% {
+      transform: scale(1.22);
+      opacity: 0;
+    }
+    55% {
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .corner {
+    position: absolute;
+    width: var(--corner);
+    height: var(--corner);
+    border: 0 solid var(--accent);
+  }
+
+  .tl {
+    left: 0;
+    top: 0;
+    border-top-width: 3px;
+    border-left-width: 3px;
+  }
+  .tr {
+    right: 0;
+    top: 0;
+    border-top-width: 3px;
+    border-right-width: 3px;
+  }
+  .bl {
+    left: 0;
+    bottom: 0;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+  }
+  .br {
+    right: 0;
+    bottom: 0;
+    border-bottom-width: 3px;
+    border-right-width: 3px;
+  }
+
+  .label {
+    position: absolute;
+    left: 0;
+    top: -32px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: var(--accent);
+    color: var(--bg-top);
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ─── Medium screens ─── */
+  @media (max-width: 1100px) {
+    .hero-grid {
+      gap: 56px;
+      --frame-w: 320px;
+      --frame-h: 388px;
+      --inset: 16px;
+      --corner: 34px;
+    }
+
+    .headline {
+      font-size: 50px;
+    }
+  }
+
+  /* ─── Phones and tablets: one column, photo under the status pill ─── */
+  @media (max-width: 900px) {
+    .hero {
+      padding: 32px 0 44px;
+    }
+
+    .hero-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      --frame-w: 240px;
+      --frame-h: 290px;
+      --inset: 12px;
+      --corner: 28px;
+    }
+
+    .hero-text {
+      display: contents;
+    }
+
+    .status {
+      order: 1;
+      padding: 6px 13px;
+      font-size: 14px;
+    }
+
+    .photo {
+      order: 2;
+      margin-top: 60px;
+    }
+
+    .headline {
+      order: 3;
+      margin-top: 32px;
+      font-size: clamp(32px, 8.7vw, 44px);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .intro {
+      order: 4;
+      margin-top: 20px;
+      font-size: 17px;
+    }
+
+    .actions {
+      order: 5;
+      margin-top: 28px;
+      width: 100%;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .actions .btn {
+      width: 100%;
+    }
+
+    .socials {
+      order: 6;
+      margin-top: 20px;
+      gap: 4px;
+    }
+
+    .label {
+      top: -28px;
+      padding: 3px 9px;
+      font-size: 12px;
+    }
+
+    .frame {
+      animation-delay: 600ms;
+    }
+
+    .scan {
+      animation-duration: 3.4s;
+      animation-delay: 1.5s;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .w {
+      animation: none;
+      opacity: 1;
+    }
+    .frame {
+      animation: none;
+    }
+    .scan {
+      display: none;
+    }
+  }
+</style>

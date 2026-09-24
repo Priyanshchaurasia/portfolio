@@ -1,0 +1,549 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import ProjectArt from './ProjectArt.astro';
+import { profile } from '../data/profile';
+
+// Projects in carousel order, skipping drafts
+const entries = (await getCollection('projects', ({ data }) => !data.draft)).sort((a, b) => a.data.order - b.data.order);
+const projects = await Promise.all(entries.map(async (entry) => ({ ...entry.data, Content: (await render(entry)).Content })));
+const count = projects.length;
+---
+
+<section class="section work" id="work" aria-labelledby="work-title" data-carousel>
+  <div class="container">
+    <div class="work-head">
+      <div>
+        <h2 class="section-title" id="work-title">{profile.work.heading}</h2>
+        <p class="section-subtitle">{profile.work.subtitle}</p>
+      </div>
+      {
+        count > 1 && (
+          <div class="arrows">
+            <button class="arrow" type="button" aria-label="Previous project" data-prev>
+              <Icon name="chevron-left" size={22} strokeWidth={1.9} />
+            </button>
+            <button class="arrow arrow-next" type="button" aria-label="Next project" data-next>
+              <Icon name="chevron-right" size={22} strokeWidth={1.9} />
+            </button>
+          </div>
+        )
+      }
+    </div>
+
+    <ul class="track" data-track aria-label="Projects">
+      {
+        projects.map((project, i) => (
+          <li class="slide" aria-label={`${i + 1} of ${count}: ${project.title}`}>
+            <div class="flow">
+              <article class="card">
+                <div class="visual">
+                  {project.image ? (
+                    <Image
+                      src={project.image}
+                      alt={project.imageAlt ?? `${project.title} screenshot`}
+                      widths={[480, 620, 960, 1240]}
+                      sizes="(max-width: 900px) 100vw, 620px"
+                    />
+                  ) : project.visual ? (
+                    <ProjectArt visual={project.visual} />
+                  ) : null}
+                </div>
+
+                <div class="body">
+                  <h3 class="title">{project.title}</h3>
+                  <p class="tagline">{project.tagline}</p>
+                  <div class="desc">
+                    <project.Content />
+                  </div>
+                  <ul class="stack" aria-label="Built with">
+                    {project.stack.map((tech) => (
+                      <li class="chip chip-sm">{tech}</li>
+                    ))}
+                  </ul>
+                  <div class="links">
+                    {project.live && (
+                      <a class="link" href={project.live} target="_blank" rel="noopener">
+                        <Icon name="external" size={17} />
+                        Live site<span class="sr-only">: {project.title}</span>
+                      </a>
+                    )}
+                    {project.code && (
+                      <a class="link" href={project.code} target="_blank" rel="noopener">
+                        <Icon name="github" size={17} />
+                        Source code<span class="sr-only">: {project.title}</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </article>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    {
+      count > 1 && (
+        <div class="controls">
+          <div class="dots">
+            {projects.map((project, i) => (
+              <button class="dot" type="button" aria-label={`Show ${project.title}`} aria-current={i === 0 ? 'true' : 'false'} data-dot={i}>
+                <span />
+              </button>
+            ))}
+          </div>
+          <p class="counter" aria-hidden="true">
+            <span data-counter>1</span> of {count}
+            <span class="swipe-hint">, swipe for more</span>
+          </p>
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .work-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+  }
+
+  .arrows {
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .arrow {
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1.5px solid var(--button-line);
+    background: transparent;
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: filter 150ms ease, border-color 150ms ease;
+  }
+
+  .arrow:hover {
+    filter: brightness(1.08);
+    border-color: var(--text-muted);
+  }
+
+  .arrow-next {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .arrow-next:hover {
+    border-color: var(--accent-hover);
+  }
+
+  /* ─── The sliding track: native scrolling, so swiping works on phones ─── */
+  .track {
+    margin: 20px -24px 0;
+    padding: 24px;
+    display: flex;
+    gap: 48px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 24px;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .slide {
+    position: relative; /* keeps hidden screen-reader text inside the track */
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  /* Amber border with a band of light travelling around it */
+  .flow {
+    height: 100%;
+    padding: 1.5px;
+    border-radius: 20px;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 197, 61, 0.28) 0%,
+      rgba(255, 197, 61, 0.28) 35%,
+      rgba(255, 197, 61, 0.95) 50%,
+      rgba(255, 197, 61, 0.28) 65%,
+      rgba(255, 197, 61, 0.28) 100%
+    );
+    background-size: 200% 100%;
+    box-shadow: 0 0 28px rgba(255, 197, 61, 0.13);
+    animation: borderflow 9s linear infinite;
+  }
+
+  @keyframes borderflow {
+    from {
+      background-position: 0% 0;
+    }
+    to {
+      background-position: 200% 0;
+    }
+  }
+
+  .card {
+    height: 100%;
+    min-height: 440px;
+    display: grid;
+    grid-template-columns: minmax(0, 31fr) minmax(0, 29fr);
+    background: var(--surface);
+    border-radius: 18.5px;
+    overflow: hidden;
+  }
+
+  .visual {
+    position: relative;
+    background: #0e1b40;
+  }
+
+  .visual :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .body {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .title {
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.15;
+  }
+
+  .tagline {
+    font-size: 19px;
+    line-height: 1.45;
+    font-weight: 500;
+  }
+
+  .desc :global(p) {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text-muted);
+  }
+
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chip-sm {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  .links {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 24px;
+  }
+
+  .link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  /* ─── Dots and counter ─── */
+  .controls {
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .dots {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-left: -12px;
+  }
+
+  .dot {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .dot span {
+    display: block;
+    width: 14px;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--button-line);
+    transition: width 300ms ease, background-color 300ms ease;
+  }
+
+  .dot[aria-current='true'] span {
+    width: 36px;
+    background: var(--accent);
+  }
+
+  .counter {
+    font-size: 15px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .swipe-hint {
+    display: none;
+  }
+
+  @media (hover: none) {
+    .swipe-hint {
+      display: inline;
+    }
+  }
+
+  /* ─── Phones and tablets: picture on top, text below ─── */
+  @media (max-width: 900px) {
+    .card {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto 1fr;
+      min-height: 0;
+      border-radius: 16.5px;
+    }
+
+    .flow {
+      border-radius: 18px;
+      box-shadow: 0 0 22px rgba(255, 197, 61, 0.12);
+    }
+
+    .visual {
+      height: clamp(190px, 48vw, 340px);
+    }
+
+    .body {
+      padding: 24px;
+      gap: 12px;
+    }
+
+    .title {
+      font-size: 26px;
+    }
+
+    .tagline {
+      font-size: 17px;
+    }
+
+    .desc :global(p) {
+      font-size: 15px;
+    }
+
+    .chip-sm {
+      padding: 5px 11px;
+      font-size: 13px;
+    }
+
+    .links {
+      gap: 0 20px;
+    }
+
+    .track {
+      margin-top: 4px;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .arrows {
+      display: none;
+    }
+
+    .dot {
+      width: 32px;
+    }
+
+    .dot span {
+      width: 12px;
+    }
+
+    .dot[aria-current='true'] span {
+      width: 28px;
+    }
+
+    .dots {
+      gap: 0;
+      margin-left: -10px;
+    }
+
+    .counter {
+      font-size: 14px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flow {
+      animation: none;
+      background: rgba(255, 197, 61, 0.45);
+    }
+  }
+</style>
+
+<script>
+  // Carousel: arrows, dots, swipe, and auto-advance.
+  // Auto-advance waits until the carousel is on screen, pauses while the mouse is over the
+  // card or a link inside it has keyboard focus, and stops for good once someone uses the
+  // arrows, dots or a swipe. It is off for visitors who prefer reduced motion.
+
+  // How long each project stays on screen, in milliseconds. 4000 is 4 seconds.
+  const SLIDE_DURATION = 3000;
+  const root = document.querySelector<HTMLElement>('[data-carousel]');
+  const track = root?.querySelector<HTMLElement>('[data-track]');
+
+  if (root && track && track.children.length > 1) {
+    const slides = Array.from(track.children) as HTMLElement[];
+    const dots = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-dot]'));
+    const counter = root.querySelector<HTMLElement>('[data-counter]');
+    const count = slides.length;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let index = 0;
+    let timer: number | undefined;
+    let hovering = false;
+    let focused = false;
+    let onScreen = false;
+    let stopped = reduceMotion;
+
+    const step = () => slides[0].offsetWidth + parseFloat(getComputedStyle(track).columnGap || '0');
+
+    const update = () => {
+      dots.forEach((dot, i) => dot.setAttribute('aria-current', String(i === index)));
+      if (counter) counter.textContent = String(index + 1);
+    };
+
+    const go = (i: number, smooth = true) => {
+      index = (i + count) % count;
+      track.scrollTo({ left: index * step(), behavior: smooth && !reduceMotion ? 'smooth' : 'auto' });
+      update();
+    };
+
+    const schedule = () => {
+      window.clearTimeout(timer);
+      if (stopped || hovering || focused || !onScreen || document.hidden) return;
+      timer = window.setTimeout(() => {
+        go(index + 1);
+        schedule();
+      }, SLIDE_DURATION);
+    };
+
+    // Keep the dots in sync when someone swipes or scrolls the track
+    let ticking = false;
+    track.addEventListener(
+      'scroll',
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          ticking = false;
+          const i = Math.round(track.scrollLeft / step());
+          if (i !== index && i >= 0 && i < count) {
+            index = i;
+            update();
+          }
+        });
+      },
+      { passive: true },
+    );
+
+    // Once someone steers the carousel themselves, it stays where they put it
+    root.querySelector('[data-prev]')?.addEventListener('click', () => {
+      stopped = true;
+      go(index - 1);
+      schedule();
+    });
+    root.querySelector('[data-next]')?.addEventListener('click', () => {
+      stopped = true;
+      go(index + 1);
+      schedule();
+    });
+    dots.forEach((dot, i) =>
+      dot.addEventListener('click', () => {
+        stopped = true;
+        go(i);
+        schedule();
+      }),
+    );
+
+    // The mouse over the card pauses it, so a project stays put while it's being read
+    track.addEventListener('mouseenter', () => {
+      hovering = true;
+      schedule();
+    });
+    track.addEventListener('mouseleave', () => {
+      hovering = false;
+      schedule();
+    });
+    root.addEventListener('focusin', () => {
+      focused = true;
+      schedule();
+    });
+    root.addEventListener('focusout', (e) => {
+      if (!root.contains(e.relatedTarget as Node)) {
+        focused = false;
+        schedule();
+      }
+    });
+    track.addEventListener(
+      'touchstart',
+      () => {
+        stopped = true;
+        schedule();
+      },
+      { passive: true },
+    );
+
+    new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        schedule();
+      },
+      { threshold: 0.5 },
+    ).observe(track);
+
+    document.addEventListener('visibilitychange', schedule);
+    window.addEventListener('resize', () => go(index, false));
+  }
+</script>

@@ -1,0 +1,162 @@
+---
+// The detection-frame cursor and the soft amber glow that follows the mouse.
+// Desktop only: skipped on touch screens and for visitors who prefer reduced motion.
+---
+
+<div class="cursor-glow" aria-hidden="true"></div>
+<div class="reticle" aria-hidden="true">
+  <span class="c tl"></span>
+  <span class="c tr"></span>
+  <span class="c bl"></span>
+  <span class="c br"></span>
+  <span class="dot"></span>
+</div>
+
+<style is:global>
+  .cursor-glow,
+  .reticle {
+    position: fixed;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    opacity: 0;
+    will-change: transform;
+  }
+
+  .cursor-glow {
+    z-index: 0;
+    width: 560px;
+    height: 560px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 197, 61, 0.11) 0%, rgba(255, 197, 61, 0.04) 38%, rgba(255, 197, 61, 0) 70%);
+    transition: transform 240ms ease-out, opacity 200ms ease;
+  }
+
+  .reticle {
+    z-index: 1000;
+    width: 40px;
+    height: 40px;
+    transition:
+      transform 90ms var(--ease-out),
+      width 220ms var(--ease-out),
+      height 220ms var(--ease-out),
+      opacity 200ms ease;
+  }
+
+  .reticle .c {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 0 solid var(--accent);
+  }
+
+  .reticle .tl {
+    left: 0;
+    top: 0;
+    border-top-width: 2px;
+    border-left-width: 2px;
+  }
+  .reticle .tr {
+    right: 0;
+    top: 0;
+    border-top-width: 2px;
+    border-right-width: 2px;
+  }
+  .reticle .bl {
+    left: 0;
+    bottom: 0;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+  }
+  .reticle .br {
+    right: 0;
+    bottom: 0;
+    border-bottom-width: 2px;
+    border-right-width: 2px;
+  }
+
+  .reticle .dot {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    margin: -2px 0 0 -2px;
+    border-radius: 50%;
+    background: var(--accent);
+    transition: opacity 150ms ease;
+  }
+
+  .reticle.locked .dot {
+    opacity: 0;
+  }
+
+  html.reticle-on .cursor-glow,
+  html.reticle-on .reticle {
+    opacity: 1;
+  }
+
+  /* Hide the normal mouse pointer while the detection frame is showing */
+  html.reticle-on,
+  html.reticle-on * {
+    cursor: none !important;
+  }
+</style>
+
+<script>
+  const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const glow = document.querySelector<HTMLElement>('.cursor-glow');
+  const reticle = document.querySelector<HTMLElement>('.reticle');
+
+  if (fine.matches && !reduce.matches && glow && reticle) {
+    const html = document.documentElement;
+    let x = -100;
+    let y = -100;
+    let target: Element | null = null;
+    let frame = 0;
+
+    const draw = () => {
+      frame = 0;
+      glow.style.transform = `translate(${x - 280}px, ${y - 280}px)`;
+
+      if (target) {
+        // Snap around the button or link under the mouse
+        const r = target.getBoundingClientRect();
+        reticle.classList.add('locked');
+        reticle.style.transform = `translate(${r.left - 8}px, ${r.top - 8}px)`;
+        reticle.style.width = `${r.width + 16}px`;
+        reticle.style.height = `${r.height + 16}px`;
+      } else {
+        reticle.classList.remove('locked');
+        reticle.style.transform = `translate(${x - 20}px, ${y - 20}px)`;
+        reticle.style.width = '40px';
+        reticle.style.height = '40px';
+      }
+    };
+
+    const request = () => {
+      if (!frame) frame = requestAnimationFrame(draw);
+    };
+
+    document.addEventListener('mousemove', (e) => {
+      x = e.clientX;
+      y = e.clientY;
+      html.classList.add('reticle-on');
+      request();
+    });
+
+    document.addEventListener('mouseover', (e) => {
+      target = (e.target as Element).closest?.('a, button, [data-lock]') ?? null;
+      request();
+    });
+
+    document.documentElement.addEventListener('mouseleave', () => {
+      html.classList.remove('reticle-on');
+      target = null;
+    });
+
+    // Keep the frame on its target while the page scrolls or the carousel slides
+    window.addEventListener('scroll', () => target && request(), { passive: true, capture: true });
+  }
+</script>
