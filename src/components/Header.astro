@@ -31,8 +31,14 @@ const links = [
           ))
         }
         <li class="nav-resume">
-          <a class="btn btn-small btn-accent-outline" href={profile.resume} download>
-            <Icon name="download" size={18} />
+          <a
+            class="btn btn-small btn-accent-outline"
+            href={profile.resume}
+            target="_blank"
+            rel="noopener"
+            data-resume-open
+          >
+            <Icon name="file-text" size={18} />
             Resume
           </a>
         </li>
