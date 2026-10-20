@@ -78,14 +78,10 @@ export const profile = {
       linkLabel: 'Verify credential',
     },
     {
-      category: 'Competition',
-      title: '1st prize, Bid-A-Biz',
-      detail: 'E-Summit, IIT Dharwad.',
-    },
-    {
-      category: 'Competition',
-      title: 'Tata Technologies InnoVent-27',
-      detail: 'Built SafeSight Edge for the AI at the Edge track on heavy-machinery operator safety.',
+      category: 'Competitions',
+      title: '1st prize, Bid-A-Biz at E-Summit, IIT Dharwad',
+      detail:
+        'Also 4th place in the college competitive programming contest at SRMIST, and built SafeSight Edge for the AI at the Edge track at Tata Technologies InnoVent-27.',
     },
     {
       category: 'Hackathons',
