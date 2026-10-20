@@ -12,7 +12,10 @@ const links = [
 
 <header class="site-header" data-menu="closed">
   <div class="container header-inner">
-    <a class="wordmark" href="#top">{profile.name}</a>
+    <a class="wordmark" href="#top">
+      <span class="name">{profile.name}</span>
+      {profile.role && <span class="role">{profile.role}</span>}
+    </a>
 
     <nav aria-label="Main">
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-menu" aria-label="Open menu">
@@ -63,16 +66,35 @@ const links = [
   }
 
   .wordmark {
-    font-family: var(--heading);
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
+    display: inline-flex;
+    align-items: baseline;
     color: var(--text);
     white-space: nowrap;
   }
 
   .wordmark:hover {
     color: var(--text);
+  }
+
+  .name {
+    font-family: var(--heading);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  /* The job title, after a thin divider */
+  .role {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  .role::before {
+    content: '|';
+    margin: 0 10px;
+    color: var(--line-strong);
+    font-weight: 400;
   }
 
   .nav-list {
@@ -100,14 +122,29 @@ const links = [
     display: none;
   }
 
+  /* Too tight next to the menu button on phones */
+  @media (max-width: 620px) {
+    .role {
+      display: none;
+    }
+  }
+
   /* ─── Phones and small tablets ─── */
   @media (max-width: 900px) {
     .header-inner {
       height: 64px;
     }
 
-    .wordmark {
+    .name {
       font-size: 19px;
+    }
+
+    .role {
+      font-size: 14px;
+    }
+
+    .role::before {
+      margin: 0 8px;
     }
 
     /* Without JavaScript, the links simply stay visible. With it, they fold into the menu. */

@@ -6,6 +6,8 @@
 
 export const profile = {
   name: 'Priyansh Chaurasia',
+  // Shown next to your name in the top-left corner. Set to '' to hide it.
+  role: 'Software engineer',
   email: 'priyansh.chaurasia62@gmail.com',
 
   // Put your resume at public/resume.pdf (Step 6). This link then works everywhere.
