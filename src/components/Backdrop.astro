@@ -1,7 +1,7 @@
 ---
-// A still backdrop behind the whole page: a few soft colour washes layered over
-// the body gradient. Pure CSS — nothing animates, nothing repaints, and there
-// is no JavaScript or canvas behind it.
+// A still backdrop behind the whole page: a faint dot grid over a few soft
+// colour washes, so empty areas have some texture. Pure CSS — nothing
+// animates, nothing repaints, and there is no canvas or JavaScript behind it.
 ---
 
 <div class="backdrop" aria-hidden="true"></div>
@@ -17,5 +17,24 @@
       radial-gradient(62% 48% at 16% 0%, rgba(125, 249, 255, 0.07), transparent 70%),
       radial-gradient(52% 42% at 88% 10%, rgba(255, 197, 61, 0.05), transparent 72%),
       radial-gradient(80% 55% at 50% 100%, rgba(30, 46, 96, 0.28), transparent 76%);
+  }
+
+  /* The dots. Raise the 0.1 to make them plainer, lower it to make them whisper;
+     change the 26px to space them further apart. */
+  .backdrop::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(186, 203, 245, 0.1) 1px, transparent 1.3px);
+    background-size: 26px 26px;
+    /* Fade the grid out down the page so it never reads as graph paper */
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.55) 55%, transparent 92%);
+    mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.55) 55%, transparent 92%);
+  }
+
+  @media (max-width: 900px) {
+    .backdrop::before {
+      background-size: 20px 20px;
+    }
   }
 </style>
